@@ -2,7 +2,7 @@
   <div class="pure-u-5-5">
     <form class="pure-form" @submit.prevent="submit">
       <fieldset>
-        <legend>Sign in ({{errors}})</legend>
+        <legend>Sign in <span v-if="errors > 0" class="u-textRed">({{errors}}) ({{fields}})</span></legend>
         <input
           :class="{'is-invalid': $v.email.$dirty}"
           type="text"
@@ -34,6 +34,13 @@ export default {
         .filter(f => f.hasOwnProperty('$dirty'))
         .filter(v => v.$dirty)
         .length
+    },
+    fields () {
+      return Object.entries(this.$v)
+        .filter(([key, value]) => !!value)
+        .filter(([key, value]) => value.hasOwnProperty('$dirty'))
+        .filter(([key, value]) => value.$dirty)
+        .map(([key, value]) => key)
     }
   },
   validations: {
